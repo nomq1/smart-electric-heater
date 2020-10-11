@@ -2,15 +2,21 @@
 unsigned int ST_CP = D11;     // RCLK
 unsigned int SH_CP = D12;     // SCLK
 unsigned int DS    = D13;     // DIO
+unsigned int ssr    = D10;     // SSR
+unsigned int rst_btn = D9;     // RED BUTTON
+unsigned int add_btn = D8; // green button
 
- 
- 
+
 void setup() 
 {
+    Serial.begin(4800);
   // Set Arduino pins as outputs
   pinMode(ST_CP, OUTPUT);
   pinMode(SH_CP, OUTPUT);  
   pinMode(DS,    OUTPUT);
+  pinMode(ssr, OUTPUT);
+  pinMode(rst_btn, INPUT);
+  pinMode(add_btn, INPUT);
 }
 
 // Table to convert a hex digit into the matching 7-seg display segments
@@ -71,12 +77,15 @@ void displayNumber(unsigned int number){
     } 
 }
 
-
+int add_btn_state ;
+int rst_btn_state ;
+int prev_rst = 0;
 void loop() 
 {
-    static int count=0;
-    
-    count = (count+1) % 10000;    // Decimal
-    displayNumber( 1800 ); 
+   digitalWrite(ssr, HIGH); // Turn the SSR on
+   rst_btn_state = digitalRead(rst_btn);
+   add_btn_state = digitalRead(add_btn);
+   displayNumber( rst_btn_state  ); 
+   Serial.println(rst_btn_state);
 }
  
